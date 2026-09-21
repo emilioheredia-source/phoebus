@@ -296,7 +296,7 @@ public class RTTank extends Canvas
      *                The thermometer look keeps a fixed margin instead. */
     public void setInnerPadding(final int pixels)
     {
-        innerPadding = Math.clamp(pixels, 0, 20);
+        innerPadding = Math.max(0, Math.min(pixels, 20));
         need_layout.set(true);
         requestUpdate();
     }
@@ -924,7 +924,7 @@ public class RTTank extends Canvas
                                       bounds.width - 2.0 * THERMO_MARGIN - leftSpace - rightSpace);
 
         // Tube takes half the width, capped, as in the stock thermometer
-        final double tubeWidth = Math.clamp(width / 2, TUBE_MIN_WIDTH, TUBE_MAX_WIDTH);
+        final double tubeWidth = Math.max(TUBE_MIN_WIDTH, Math.min(width / 2, TUBE_MAX_WIDTH));
 
         // Bulb is wider than the tube, but must fit the remaining width and height
         double bulbDiameter = tubeWidth + bulbSize;
@@ -988,8 +988,8 @@ public class RTTank extends Canvas
         // would overflow the integer screen coordinate, so limit them first.
         if (Double.isNaN(current))
             return geom.tubeBottom();
-        final double inRange = Math.clamp(current, min, max);
-        return Math.clamp(scale.getScreenCoord(inRange), geom.tubeTop(), geom.tubeBottom());
+        final double inRange = Math.max(min, Math.min(current, max));
+        return Math.max(geom.tubeTop(), Math.min(scale.getScreenCoord(inRange), geom.tubeBottom()));
     }
 
     /** Paint the tube in the empty color, shaded like the tank */
